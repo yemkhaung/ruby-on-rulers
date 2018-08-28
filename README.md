@@ -1,2 +1,2 @@
 # ruby-on-rulers
-Rebuilding Rails
+A minimalist Ruby Web Framework
