@@ -20,8 +20,12 @@ module Rulers
       klass, act = get_controller_and_action(env)
       controller = klass.new(env)
       text = controller.send(act)
-      # response with text returned from controller action
-      [200, {'Content-Type' => 'text/html'}, [text]]
+      if controller.get_response
+        resp = controller.get_response
+        [resp.status, resp.header, resp.body]
+      else
+        [200, {'Content-Type' => 'text/html'}, [text]]
+      end
     end
   end
 end
