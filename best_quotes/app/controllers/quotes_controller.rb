@@ -5,19 +5,19 @@ class QuotesController < Rulers::Controller
 
     def quote_1
         # model logic
-        quote_1 = Rulers::Model::FileModel.find(1)
+        quote_1 = Rulers::Model::SQLiteModel.find(1)
         # render logic
         render :quote, :obj => quote_1
     end
     
     def index
-        quotes = Rulers::Model::FileModel.all
+        quotes = Rulers::Model::SQLiteModel.all
         render :index, :quotes => quotes
     end
 
     def show
         # read "id" attribute from request query params
-        quote = Rulers::Model::FileModel.find(params["id"])
+        quote = Rulers::Model::SQLiteModel.find(params["id"])
         ua = request.user_agent
         render_response :quote, :obj => quote, :ua => ua
     end
@@ -33,7 +33,7 @@ class QuotesController < Rulers::Controller
             "quote" => "A picture is worth a thousand pixels.",
             "attribution" => "Me"
         }
-        m = Rulers::Model::FileModel.create attrs
+        m = Rulers::Model::SQLiteModel.create attrs
         render :quote, :obj => m
     end
 end
