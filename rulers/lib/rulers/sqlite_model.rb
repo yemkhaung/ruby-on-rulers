@@ -78,8 +78,6 @@ SQL
 SELECT #{schema.keys.join ","} FROM #{table}
 WHERE id = #{id};
 SQL
-                puts "schema >>> #{schema}"
-                puts "row >>> #{row}"
                 data = Hash[schema.keys.zip row[0]]
                 self.new data
             end

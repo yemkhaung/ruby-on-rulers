@@ -3,6 +3,7 @@ class QuotesController < Rulers::Controller
         render :a_quote, :noun => :winking
     end
 
+    # get quote with id:1
     def quote_1
         # model logic
         quote_1 = Rulers::Model::SQLiteModel.find(1)
