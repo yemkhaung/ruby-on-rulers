@@ -7,8 +7,29 @@ module Rulers
         include Rulers::Model
         def initialize(env)
           @env = env
+          @routing_params = {}
         end
-        
+
+        def dispatch(action, routing_params = {})
+            @routing_params = routing_params
+            text = self.send(action)
+            if get_response
+                resp = get_response
+                [resp.status, resp.headers, resp.body]
+            else
+                [200, {'Content-Type' => 'text/html'}, [text]]
+            end
+        end
+
+        def self.action(act, rp)
+            proc { |e| self.new(e).dispatch(act, rp) }
+        end
+
+
+        def params
+            request.params.merge @routing_params
+        end
+
         def env
           @env
         end
@@ -17,10 +38,6 @@ module Rulers
             # ||= means : 
             # use old request if not nil or false (OR) create a new one 
             @request ||= Rack::Request.new(@env)
-        end
-
-        def params
-            request.params
         end
 
         def response(text, status=200, headers = {'Content-Type' => 'text/html'})

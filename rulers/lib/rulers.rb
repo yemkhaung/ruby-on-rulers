@@ -12,21 +12,22 @@ module Rulers
     def call(env)
       if env['PATH_INFO'] == '/favicon.ico'
         return [404, {'Content-Type' => 'text/html'}, []]
-      elsif env['PATH_INFO'] == '/'
-        # Redirect to /home/index (HomeController#index)
-        return [302, {'Location' => "http://#{env['HTTP_HOST']}/home/index"}, []]
       end
       
-      # Load the controller and execute the controller's action
-      klass, act = get_controller_and_action(env)
-      controller = klass.new(env)
-      text = controller.send(act)
-      if controller.get_response
-        resp = controller.get_response
-        [resp.status, resp.header, resp.body]
-      else
-        [200, {'Content-Type' => 'text/html'}, [text]]
-      end
+      # spawn and call a Rack App from request
+      rack_app = get_rack_app(env)
+      raise "Route <#{env['PATH_INFO']}> not found!" unless rack_app
+      rack_app.call(env)
+    end
+
+    def route(&block)
+      @route_obj ||= RouteObject.new
+      @route_obj.instance_eval(&block)
+    end
+
+    def get_rack_app(env)
+      raise "No Route!" unless @route_obj
+      @route_obj.check_url env['PATH_INFO']
     end
   end
 end
