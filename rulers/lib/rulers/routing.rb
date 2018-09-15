@@ -42,8 +42,8 @@ class RouteObject
         })
     end
 
+    # Checks the URL and returns a executable rack app (proc)
     def check_url(url)
-        STDERR.puts "@RULES >>> ", @rules
         @rules.each do |r|
             # check if there is any matches
             m = r[:regexp].match(url)

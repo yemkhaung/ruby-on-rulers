@@ -26,8 +26,8 @@ end
 app = BestQuotes::Application.new
 
 use Rack::ContentType
-# use BenchMarker
 
+# Setup Routes
 app.route do
     match "", "quotes#index"
     match "subapp",
@@ -39,6 +39,7 @@ app.route do
         :default => { "action" => "index" }
 end
 
+use BenchMarker
 run app
 
 # run Proc.new { |env| ['200', {'Content-Type' => 'text/html'}, ['get rack\'d']] }
